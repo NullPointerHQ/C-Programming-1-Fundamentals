@@ -1,4 +1,3 @@
-//COP 2220	11/17/23 
 //Preprocessor Directives
 #include <stdio.h>
 #include <stdbool.h>//We have boolean variables, this is required.
