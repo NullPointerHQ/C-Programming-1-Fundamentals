@@ -1,0 +1,125 @@
+//COP 2220	11/17/23 
+//Preprocessor Directives
+#include <stdio.h>
+#include <stdbool.h>//We have boolean variables, this is required.
+#include <stdlib.h>//For Rand function
+#include <time.h>//For srand function
+
+int main() {	
+	/*Establishing a set of array for the password generator that will each hold a set of
+	Constant values i.e unmodifiable values
+	Special character array doesn't cover every possible value, mostly because I wanted to avoid 
+	issues with C, however I believe I covered enough characters that it should generate strong password nonetheless.*/ 
+	const char uppercaseLetters[27] = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
+	const char lowercaseLetters[27] = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
+	const char numbers[10] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+	const char specialCharracters[12] = {'!', '@', '#', '$', '%', '^', '&', '*', '.','|','/',};
+
+	//Boolean variables to determine what goes into the password
+	bool uppercaseIncluded = false;
+	bool lowercaseIncluded = false;
+	bool numbersIncluded = false;
+	bool specialCharactersincluded = false;
+
+	int passwordLength = 0;//Holds the max length of the password
+	int sum = 0;//Used to check that atleast ONE option is selected
+	int choice = 0;//Choice flag sets the bool variables to true.
+	
+
+	printf("Hello User, today I am going to make a password for you.\n");
+	printf("Lets go through a series of options, please enter 1 for yes or 0 for no.\n");
+	
+	printf("Should this password include uppercase characters?\n");
+	scanf("%d", &choice);
+	if (choice == 1) {
+		uppercaseIncluded = true;//Setting Bool variable to true so that the password can include this
+		choice = 0;//Resetting choice to original value
+		sum++;
+	}
+	else if (choice <= -1 || choice >= 2) {//Error handling applies if the user's choice isn't one or zero
+		printf("Invalid Option. Terminating Program.");
+		return 1;
+	}
+	printf("Should this password include lowercase characters?\n");
+	scanf("%d", &choice);
+	if (choice == 1) {
+		lowercaseIncluded = true;//Setting Bool variable to true so that the password can include this
+		choice = 0;//Resetting choice to original value
+		sum++;
+	}
+	else if (choice <= -1 || choice >= 2) {//Error handling applies if the user's choice isn't one or zero
+		printf("Invalid Option. Terminating Program.");
+		return 1;
+	}
+
+	printf("Should this password include numeric characters?\n");
+	scanf("%d", &choice);
+	if (choice == 1) {
+		numbersIncluded = true;//Setting Bool variable to true so that the password can include this
+		choice = 0;//Resetting choice to original value
+		sum++;
+	}
+	else if (choice <= -1 || choice >= 2) {//Error handling applies if the user's choice isn't one or zero
+		printf("Invalid Option. Terminating Program.");
+		return 1;
+	}
+
+	printf("Should this password include special characters?\n");
+	scanf("%d", &choice);
+	if (choice == 1) {
+		specialCharactersincluded = true;//Setting Bool variable to true so that the password can include this
+		choice = 0;//Resetting choice to original value
+		sum++;
+	}
+	else if (choice <= -1 || choice >= 2) {//Error handling applies if the user's choice isn't one or zero
+		printf("Invalid Option. Terminating Program.");
+		return 1;
+	}
+
+	if (sum == 0) {//No options were taken. Error message
+		printf("Error: No options selected.\n Password creation impossible.\n Terminating program\n");
+		return 1;
+	}
+
+	printf("How long should the password be?\n");//Getting length from the user
+	scanf("%d", &passwordLength);
+	
+	char *passwordPtr = (char*)malloc(passwordLength + 1);//Allocating memory for the password, +1 accounts for NULL terminator
+	
+	//Making sure malloc was successful.
+	if (passwordPtr == NULL) {
+		printf("Memory allocation failed. Terminating Program.\n");
+		return 1;
+	}
+
+	srand(time(NULL));//Seeding the generator 
+
+	int index = 0;//Stores pos. in the string, also used to make sure program runs long enough to get the length desired.
+while(index < passwordLength){//Ensures that the program runs long enough
+	if (uppercaseIncluded == true) {
+		//Will select random letters from the uppercaseLetters array and place them in the password array 
+		passwordPtr[index] = uppercaseLetters[rand() % 26];
+		index++;//Increment each time to move to the next character slot in the string
+	}
+	if (lowercaseIncluded == true) {
+		//Will select random letters (up to index 26) from the lowercaseLetters array and place them in the password array
+		passwordPtr[index] = lowercaseLetters[rand() % 26];
+		index++;//Increment each time to move to the next character slot in the string
+	}
+	if (numbersIncluded == true) {
+		//Will select random numbers from the numbers array and place them in the password array
+		passwordPtr[index] = numbers[rand() % 10];
+		index++;//Increment each time to move to the next character slot in the string
+	}
+	if (specialCharactersincluded == true) {
+		//Will select random characters from the specialCharacters array and place them in the password array
+		passwordPtr[index] = specialCharracters[rand() % 12];
+		index++;//Increment each time to move to the next character slot in the string
+	}
+}
+	passwordPtr[index] = '\0';//NULL Terminator
+
+	printf("Generated Password: %s\n", passwordPtr);//Printing result
+	free(passwordPtr);//Prevents memory leak.
+	return 0;
+}

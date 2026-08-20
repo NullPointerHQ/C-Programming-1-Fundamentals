@@ -1,0 +1,116 @@
+/*Assignment 2	COP 2220*/
+//Preprocessor Directives
+#include <stdio.h>
+#include <string.h>//Don't think I need this but just in case
+#include <stdlib.h>
+
+//Function Prototypes
+void studentInfoscraper(struct Student* students, int* numStudents);
+void displayTable(struct Student* students, int* numStudents);
+
+//Structure
+struct Student {
+	char name[50];//Stores student name
+	int scores[5];//Stores all 5 test scores.
+	double grade;//Stores the average of test scores
+};
+
+int main() {
+	int numStudents = 0; //Used to allocate memory for the structure array 
+	int choice = 0;
+	struct Student* studentPtr = NULL; //Pointer Variable that will allow me to retain the information in the structure outside case 1
+	
+
+	//User Input Menu
+	
+	printf("Welcome user.\n");
+	printf("Please choose from one of the following options or press 3 to exit.\n");
+	while (choice != 3) {
+	printf("Press 1 for student data entry\n");
+	printf("Press 2 to view the data already in the database\n");
+	printf("Press 3 to exit\n");
+	scanf("%d", &choice);
+
+	
+	
+	switch (choice){
+	case 1://Information Input, UDF
+		//Since the number of students can vary I need to allocate memory for this that can change on the fly depending 
+		//on the needs of the user.
+		printf("How many students do you currently have?\n");
+		scanf("%d", &numStudents);
+		studentPtr = (struct Student*)malloc(numStudents * sizeof(struct Student));//Allocating Memory for the Structures
+		
+		if (studentPtr == NULL) {//Error Handling for malloc
+			printf("Memory allocation failed!\n Terminating Program....\n");
+			return 1;
+		}
+		else {
+			printf("Memory allocation succesful!\n");//Success Message
+		}
+		studentInfoscraper(studentPtr,numStudents);//Function call
+		break;
+	case 2://Display Student Information ||Fully functional
+		displayTable(studentPtr, numStudents);//Function Call
+		printf("All students displayed\n");
+		break;
+	case 3://Exit
+		free(studentPtr);//Prevents mem. leakage
+		return 0;
+	default:
+		printf("Invalid Choice\n");
+		break;
+	}
+	}	
+}
+void studentInfoscraper(struct Student* students, int* numStudents) {//FULLY FUNCTIONAL
+	for (int i = 0; i < numStudents; i++) {//Will run as long as i is less than the number of students
+		
+		printf("Student %d\n", i + 1);//Prints the index value for the student
+		
+		printf("What is the name of the student?\n");//Requests the name of the student from the user
+		getchar();//Eliminates the \n character
+		fgets(students[i].name, sizeof(students[i].name), stdin);//Assigns the value provided to the name field, fgets used to preserve spaces
+		students[i].name[strcspn(students[i].name, "\n")] = '\0';//Removes newline character
+
+		printf("And what are %s's last 5 test scores?\n", students[i].name);//Does not actually gather the scores, this just display
+		printf("Please keep the values seperated by spaces.\n");
+		
+		//Looping through the 5 elements of the grades array and gathering values
+		for (int j = 0; j < 5; j++) {
+			scanf("%d", &students[i].scores[j]);
+		}
+
+		//Grade Average Calculation
+		int calculationAvg = 0;//Used to store the value of the student's scores
+		for (int j = 0; j < 5; j++) {
+			calculationAvg += students[i].scores[j];//Running total of provided scores
+		}
+
+		students[i].grade = calculationAvg / 5.0;//Gathers the actual average and stores it in the Grade field
+	}
+	//All fields are filled with the information of all the students this function has now served it's purpose
+	//Return to the main function.
+}
+
+void displayTable(struct Student* students, int* numStudents) {
+/*This function will iterate through each student and display their information
+as it was provided earlier.*/
+
+	for (int i = 0; i < numStudents; i++) {//Iterates through every student
+		
+		printf("Student #%d\n", i + 1);//Printing out the index of the student
+		
+		printf("%s\n", students[i].name);//Student Name
+		
+		printf("Last 5 Test scores entered: \n");//Iterates through the 5 test scores and prints them.
+		for (int j = 0; j < 5; j++) {
+			printf("%d ", students[i].scores[j]);
+		}
+		
+		printf("\n");
+		
+		printf("Calculated Average: %.2f\n\n", students[i].grade);//Prints out calculated average to two decimal places
+	}
+	//Job done, function has no purpose please head back to the main.
+}
