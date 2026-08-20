@@ -1,4 +1,3 @@
-/*Assignment 2	COP 2220*/
 //Preprocessor Directives
 #include <stdio.h>
 #include <string.h>//Don't think I need this but just in case
