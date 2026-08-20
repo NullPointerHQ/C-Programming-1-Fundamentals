@@ -2,7 +2,7 @@
 An archive of my coursework from Programming 1, written in C.
 
 <p align="center">
-  <img src="./assets/banner.png" alt="Programming 1 Banner" width="50%">
+  <img src="./assets/banner.png" alt="Programming 1 Banner" width="70%">
   <br>
   <sub>⚖️ <em>Image Credits:</em> <a href="https://carbon.now.sh">Carbon.now.sh</a></sub>
 </p>
